@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PruebasController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,6 +24,7 @@ Route::get('/', function () {
 Route::get('/testorm',[PruebasController::class,'testOrm']);
 
 Route::get('/usuario/pruebas',[UserController::class,'pruebas']);
+*/
 
 
 //RUTAS API
@@ -35,6 +38,7 @@ Put     - Actualizar datos
 Delete  - Eliminar datos
 */
 
+//Rutas API Usuarios
 Route::post('/api/register',[UserController::class,'register']);
 Route::post('/api/login',[UserController::class,'login']);
 Route::put('/api/user/update',[UserController::class,'update']);
@@ -42,3 +46,5 @@ Route::post('/api/user/upload',[UserController::class,'upload'])->middleware('ap
 Route::get('/api/user/avatar/{filename}',[UserController::class,'getImage']);
 Route::get('/api/user/detail/{id}',[UserController::class,'detail']);
 
+//Rutas Api Categories
+Route::resource('/api/category', CategoryController::class);
