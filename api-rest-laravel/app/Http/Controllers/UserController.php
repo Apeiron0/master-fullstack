@@ -226,7 +226,8 @@ class UserController extends Controller
         if($isset){
         $file=\Storage::disk('users')->get($filename);
         return new Response($file, 200);
-    }else{
+        }
+        else{
         $data=array(
             'code'=>400,
            'status'=>'error',
@@ -234,6 +235,26 @@ class UserController extends Controller
         );
         return response()->json($data,$data['code']);
         }
+        
     }
+
+    public function detail($id){
+        $user=User::find($id);
+        if(is_object($user)){
+            $data=array(
+                'code'=>200,
+                'status'=>'success',
+                'user'=>$user
+            );
+        }else{
+            $data=array(
+                'code'=>400,
+                'status'=>'error',
+                'message'=>'El usuario no existe'
+            );
+        }
+        return response()->json($data,$data['code']);
+    }
+
 
 }
