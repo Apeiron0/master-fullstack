@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PruebasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +49,6 @@ Route::get('/api/user/detail/{id}',[UserController::class,'detail']);
 
 //Rutas Api Categories
 Route::resource('/api/category', CategoryController::class);
+
+//Rutas Api Posts
+Route::resource('/api/post', PostController::class);
