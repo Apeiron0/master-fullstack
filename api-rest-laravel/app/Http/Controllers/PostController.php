@@ -79,5 +79,56 @@ class PostController extends Controller
         ]);
     }
    }
+
+   public function update(Request $request,$id){
+    //Recoger datos por post
+    $json=$request->input('json',null);
+    $params_array=json_decode($json,true);
+
+    //comprobar si no es null
+    if(!empty($params_array)){
+
+    //Validar datos
+    $validate=\Validator::make($params_array,[
+        'title'=>'required',
+        'content'=>'required',
+        'category_id'=>'required',
+        'image'=>'required',
+    ]);
+
+    if($validate->fails()){
+        return response()->json([
+            'code'=>400,
+          'status'=>'error',
+          'message'=>$validate->errors()
+        ]);
+    }
+
+    //Quitar lo que no quiera acttualizar
+    unset($params_array['id']);
+    unset($params_array['created_at']);
+    unset($params_array['updated_at']);
+    unset($params_array['user_id']);
+    unset($params_array['user']);
+
+    //Actualizar registro
+    $post=Post::where('id',$id)->update($params_array);
+
+    return response()->json([
+        'code'=>200,
+        'status'=>'success',
+        'post'=>$data,
+        'changes'=>$params_array
+    ]);
+    }
+    else{
+        return response()->json([
+            'code'=>400,
+           'status'=>'error',
+           'message'=>'No se envian datos'
+        ]);
+    }
+   }
+   
    
 }
