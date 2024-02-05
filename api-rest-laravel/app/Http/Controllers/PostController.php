@@ -130,14 +130,20 @@ class PostController extends Controller
     }
    }
 
-   public function destroy($id){
-        $post=Post::find($id);
-        $post=Post::where('id',$id)->delete($id);
+   public function destroy(Request $request,$id){
+
+        //conseguir datos usuario
+        $jwtAuth=new JWTAuth();
+        $token=$request->header('Authorization',null);
+        $user=$jwtAuth->checkToken($token,true);
+
+        //$post=Post::find($id)->where('user_id',$user->sub);
+        
+        $post=Post::where('id',$id)->where('user_id',$user->sub)->delete($id);
         if($post>=1){
             return response()->json([
                 'code'=>200,
-                'status'=>'success'
-                //'post'=>$post
+                'status'=>'success',                
             ]);
         }else{
             return response()->json([
