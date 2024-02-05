@@ -117,7 +117,7 @@ class PostController extends Controller
     return response()->json([
         'code'=>200,
         'status'=>'success',
-        'post'=>$data,
+        'post'=>$post,
         'changes'=>$params_array
     ]);
     }
@@ -128,6 +128,24 @@ class PostController extends Controller
            'message'=>'No se envian datos'
         ]);
     }
+   }
+
+   public function destroy($id){
+        $post=Post::find($id);
+        $post=Post::where('id',$id)->delete($id);
+        if($post>=1){
+            return response()->json([
+                'code'=>200,
+                'status'=>'success'
+                //'post'=>$post
+            ]);
+        }else{
+            return response()->json([
+                'code'=>404,
+                'status'=>'error',
+                'message'=>'Post not found'
+            ]);
+        }
    }
    
    
