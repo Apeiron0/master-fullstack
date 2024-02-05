@@ -45,10 +45,7 @@ class PostController extends Controller
     $params_array=json_decode($json,true);
     
     //conseguir datos usuario
-    $jwtAuth=new JWTAuth();
-    $token=$request->header('Authorization',null);
-    $user=$jwtAuth->checkToken($token,true);
-
+    $user=$this->getIdentity($request);
     //validar datos
     $validate=\Validator::make($params_array,[
         'title'=>'required',
@@ -85,6 +82,9 @@ class PostController extends Controller
     $json=$request->input('json',null);
     $params_array=json_decode($json,true);
 
+    //Verificar identidad usuario
+    $user=$this->getIdentity($request);
+
     //comprobar si no es null
     if(!empty($params_array)){
 
@@ -112,7 +112,7 @@ class PostController extends Controller
     unset($params_array['user']);
 
     //Actualizar registro
-    $post=Post::where('id',$id)->update($params_array);
+    $post=Post::where('id',$id)->where('user_id',$user->sub)->update($params_array);
 
     return response()->json([
         'code'=>200,
@@ -132,11 +132,7 @@ class PostController extends Controller
 
    public function destroy(Request $request,$id){
 
-        //conseguir datos usuario
-        $jwtAuth=new JWTAuth();
-        $token=$request->header('Authorization',null);
-        $user=$jwtAuth->checkToken($token,true);
-
+        $user=$this->getIdentity($request);
         //$post=Post::find($id)->where('user_id',$user->sub);
         
         $post=Post::where('id',$id)->where('user_id',$user->sub)->delete($id);
@@ -152,6 +148,15 @@ class PostController extends Controller
                 'message'=>'Post not found'
             ]);
         }
+   }
+
+   private function getIdentity(Request $request){
+        //conseguir datos usuario
+        $jwtAuth=new JWTAuth();
+        $token=$request->header('Authorization',null);
+        $user=$jwtAuth->checkToken($token,true);
+
+        return $user;
    }
    
    
