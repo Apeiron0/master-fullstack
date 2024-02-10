@@ -11,7 +11,12 @@ class PostController extends Controller
     //
    public function __construct()
    {
-    $this->middleware('apiauth',['except'=>['index','show','getImage']]);
+    $this->middleware('apiauth',['except'=>[
+        'index',
+        'show',
+        'getImage',
+        'getPostsByCategory',
+        'getPostsByUser']]);
    }
 
    public function index(){
@@ -211,5 +216,15 @@ class PostController extends Controller
     return response()->json($data,$data['code']);
 
 
+   }
+
+   public function getPostsByCategory($id){
+    $post=Post::where('category_id',$id)->get();
+    return response()->json($post,200);
+   }
+
+   public function getPostsByUser($id){
+    $post=Post::where('user_id',$id)->get();
+    return response()->json($post,200);
    }
 }
