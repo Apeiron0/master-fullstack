@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Helpers\JwtAuth;
+use Symfony\Component\HttpFoundation\Response;
 class PostController extends Controller
 {
     //
    public function __construct()
    {
-    $this->middleware('apiauth',['except'=>['index','show']]);
+    $this->middleware('apiauth',['except'=>['index','show','getImage']]);
    }
 
    public function index(){
@@ -187,5 +188,28 @@ class PostController extends Controller
 
     //Devolver datos
     return response()->json($data,$data['code']);
+   }
+
+   public function getImage($filename){
+    //Comporbar si existe el fichero
+    $isset=\Storage::disk('images')->exists($filename);
+    if($isset){
+        //Conseguir la imagen
+        $file=\Storage::disk('images')->get($filename);
+
+        //Devolver la imagen
+        return new Response($file,200);
+
+    }else{
+        //Mostrar error si es que existe
+        $data=[
+            'code' =>404,
+            'status' =>'error',
+            'message'=>'Imagen no encontrada'
+        ];
+    }
+    return response()->json($data,$data['code']);
+
+
    }
 }
